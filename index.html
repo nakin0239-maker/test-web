@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สมุดเยี่ยม 24 ชม.</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { text-align: center; color: #333; }
+        input, textarea, button { width: 100%; margin-bottom: 15px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #0056b3; }
+        .msg-box { background: #e9ecef; padding: 15px; margin-bottom: 10px; border-radius: 6px; border-left: 5px solid #007bff; }
+        .msg-box span { font-size: 0.85em; color: #666; display: block; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>📝 ฝากข้อความ (24 ชม.)</h2>
+        <input type="text" id="nickname" placeholder="ชื่อเล่นของคุณ" required>
+        <input type="text" id="grade" placeholder="ชั้น/ห้อง (เช่น ม.4/1)" required>
+        <textarea id="message" rows="3" placeholder="พิมพ์ข้อความที่นี่..." required></textarea>
+        <button id="sendBtn" onclick="sendMessage()">ส่งข้อความเลย!</button>
+    </div>
+
+    <div class="container" style="margin-top: 20px;">
+        <h3 style="text-align: center;">💬 ข้อความล่าสุด</h3>
+        <div id="posts">กำลังโหลดข้อความ...</div>
+    </div>
+
+    <script>
+        // ดึงข้อความมาแสดง
+        async function loadMessages() {
+            try {
+                const res = await fetch('/api/messages');
+                const data = await res.json();
+                const postsDiv = document.getElementById('posts');
+                postsDiv.innerHTML = '';
+                
+                if(data.length === 0) {
+                    postsDiv.innerHTML = '<p style="text-align:center; color:#888;">ยังไม่มีข้อความ เป็นคนแรกที่ฝากข้อความสิ!</p>';
+                    return;
+                }
+
+                data.forEach(msg => {
+                    const date = new Date(msg.timestamp).toLocaleString('th-TH');
+                    postsDiv.innerHTML += `
+                        <div class="msg-box">
+                            <strong>${msg.nickname}</strong> (${msg.grade})
+                            <p style="margin: 8px 0;">${msg.message}</p>
+                            <span>🕒 ${date}</span>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                document.getElementById('posts').innerHTML = 'เกิดข้อผิดพลาดในการโหลดข้อความ';
+            }
+        }
+
+        // ส่งข้อความ
+        async function sendMessage() {
+            const nickname = document.getElementById('nickname').value;
+            const grade = document.getElementById('grade').value;
+            const message = document.getElementById('message').value;
+            const btn = document.getElementById('sendBtn');
+
+            if(!nickname || !grade || !message) {
+                alert("กรุณากรอกข้อมูลให้ครบทุกช่องนะครับ!");
+                return;
+            }
+
+            btn.innerText = 'กำลังส่ง...';
+            btn.disabled = true;
+
+            try {
+                await fetch('/api/messages', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ nickname, grade, message })
+                });
+                
+                // ล้างข้อมูลในช่องพิมพ์
+                document.getElementById('nickname').value = '';
+                document.getElementById('grade').value = '';
+                document.getElementById('message').value = '';
+                
+                // โหลดข้อความใหม่
+                loadMessages();
+            } catch (error) {
+                alert("ส่งข้อความไม่สำเร็จ ลองใหม่อีกครั้งครับ");
+            } finally {
+                btn.innerText = 'ส่งข้อความเลย!';
+                btn.disabled = false;
+            }
+        }
+
+        // โหลดข้อมูลทันทีที่เปิดเว็บ
+        loadMessages();
+    </script>
+</body>
+</html>
