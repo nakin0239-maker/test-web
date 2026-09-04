@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บันทึกเอาตัวรอด</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .main-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px 20px;
+            box-sizing: border-box;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+
+        .school-logo {
+            width: 120px; 
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #333; 
+            margin: 0;
+            font-size: 24px;
+        }
+
+        /* ตกแต่งกล่องหัวข้อที่กดได้ */
+        details {
+            background-color: #eef5ff;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        details[open] {
+            background-color: #e0edff; /* สีเข้มขึ้นนิดนึงตอนกดเปิด */
+        }
+
+        summary {
+            font-weight: bold;
+            color: #00509e;
+            font-size: 18px;
+            outline: none;
+            list-style: none; /* ซ่อนลูกศรแบบเก่า */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ทำลูกศรสวยๆ ไว้ด้านขวา */
+        summary::after {
+            content: '▼';
+            font-size: 14px;
+            color: #00509e;
+        }
+
+        details[open] summary::after {
+            content: '▲';
+        }
+
+        /* ส่วนเนื้อหาที่มีแค่จุด */
+        .content-dot {
+            padding-top: 15px;
+            color: #444;
+            font-size: 18px;
+            text-indent: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        
+        <div class="header-section">
+            <!-- โลโก้เดิมของคุณ -->
+            <img src="mh_logo (1).png" alt="โลโก้" class="school-logo">
+            <h1>คู่มือเอาตัวรอด</h1>
+        </div>
+
+        <!-- หัวข้อที่ 1 -->
+        <details>
+            <summary>1. วิธีอยู่</summary>
+            <div class="content-dot">.</div>
+        </details>
+
+        <!-- หัวข้อที่ 2 -->
+        <details>
+            <summary>2. เรื่องที่ทำใจ</summary>
+            <div class="content-dot">.</div>
+        </details>
+
+        <!-- หัวข้อที่ 3 -->
+        <details>
+            <summary>3. สิ่งแวดล้อม</summary>
+            <div class="content-dot">.</div>
+        </details>
+
+    </div>
+
+</body>
+</html>
